@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.mapper.PostMapper">
+    <select id="findAll" parameterType="string" resultType="com.example.blog.model.Post">
+        SELECT id, title, content, tag, author, createdAt
+        FROM posts
+    </select>
+    <select id="findByTag" parameterType="string" resultType="com.example.blog.model.Post">
+        SELECT id, title, content, tag, author, createdAt
+        FROM posts
+        WHERE tag = #{tag}
+    </select>
+    <insert id="save" parameterType="com.example.blog.model.Post">
+        INSERT INTO posts (title, tag, content, author, createdAt, updatedAt)
+        VALUES (#{title}, #{tag}, #{content}, #{author}, #{createdAt}, #{updatedAt})
+    </insert>
+</mapper>

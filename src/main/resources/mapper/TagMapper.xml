@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.mapper.TagMapper">
+    <select id="findAll" resultType="String">
+        SELECT id, name
+        FROM tags
+    </select>
+
+    <insert id="save">
+        INSERT INTO tags (name)
+        VALUES (#{tag})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM tags
+        WHERE name = #{tag}
+    </delete>
+</mapper>
