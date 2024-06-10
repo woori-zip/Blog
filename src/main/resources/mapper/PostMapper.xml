@@ -1,17 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.blog.mapper.PostMapper">
-    <select id="findAll" parameterType="string" resultType="com.example.blog.model.Post">
-        SELECT id, title, content, tag, author, createdAt
-        FROM posts
+
+    <select id="findAll" resultMap="PostResultMap">
+        SELECT p.id, p.title, p.content, p.author, p.tagId AS tagId, t.name AS tag, p.createdAt, p.updatedAt
+        FROM posts p
+        LEFT JOIN tags t ON p.tagId = t.id
+        <if test="tag != null and tag != ''">
+            WHERE t.name = #{tag}
+        </if>
     </select>
-    <select id="findByTag" parameterType="string" resultType="com.example.blog.model.Post">
-        SELECT id, title, content, tag, author, createdAt
-        FROM posts
-        WHERE tag = #{tag}
-    </select>
+
     <insert id="save" parameterType="com.example.blog.model.Post">
-        INSERT INTO posts (title, tag, content, author, createdAt, updatedAt)
-        VALUES (#{title}, #{tag}, #{content}, #{author}, #{createdAt}, #{updatedAt})
+        INSERT INTO posts (title, content, author, tagId, createdAt, updatedAt)
+        VALUES (#{title}, #{content}, #{author}, #{tagId}, #{createdAt}, #{updatedAt})
     </insert>
+
+    <resultMap id="PostResultMap" type="com.example.blog.model.Post">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="author" column="author" />
+        <result property="tagId" column="tagId" />
+        <result property="tag" column="tag" />
+        <result property="createdAt" column="createdAt" />
+        <result property="updatedAt" column="updatedAt" />
+    </resultMap>
+
 </mapper>

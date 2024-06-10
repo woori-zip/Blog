@@ -12,13 +12,13 @@
         <tr>
             <td><label for="tag">Tag:</label></td>
             <td>
-                <select id="tag" name="tag">
+                <select id="tagSelect" name="tag">
                     <c:forEach var="tag" items="${tags}">
-                        <option value="${tag}">${tag}</option>
+                        <option value="${tag.name}">${tag.name}</option>
                     </c:forEach>
                 </select>
-                <input type="text" id="newTag" name="newTag" style="display:none;" placeholder="Enter new tag">
-                <button type="button" onclick="showNewTagInput()">New Tag</button>
+                <input type="text" id="newTag" name="newTag" placeholder="New Tag" style="display: none;">
+                <button type="button" id="newTagButton" onclick="toggleTagInput()">New Tag</button>
             </td>
         </tr>
         <tr>
@@ -30,5 +30,21 @@
         </tr>
     </table>
 </form>
+<script>
+    function toggleTagInput() {
+        const tagSelect = document.getElementById('tagSelect');
+        const newTagInput = document.getElementById('newTag');
+        const newTagButton = document.getElementById('newTagButton');
 
+        if (newTagInput.style.display === 'none') {
+            newTagInput.style.display = 'inline';
+            tagSelect.disabled = true;
+            newTagButton.textContent = 'Cancel';
+        } else {
+            newTagInput.style.display = 'none';
+            tagSelect.disabled = false;
+            newTagButton.textContent = 'New Tag';
+        }
+    }
+</script>
 <%@ include file="../footer.jsp" %>

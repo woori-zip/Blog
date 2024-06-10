@@ -1,7 +1,9 @@
 package com.example.blog.service;
 
 import com.example.blog.mapper.PostMapper;
+import com.example.blog.mapper.TagMapper;
 import com.example.blog.model.Post;
+import com.example.blog.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,10 @@ public class PostService {
     PostMapper postMapper;
 
     public List<Post> findAll(String tag) {
-        if(tag==null || tag.isEmpty()) {
-            return postMapper.findAll();
-        } else {
-            return postMapper.findByTag(tag);
-        }
+        return postMapper.findAll(tag);
     }
 
     public void createPost(Post post) {
         postMapper.save(post);
     }
-
 }

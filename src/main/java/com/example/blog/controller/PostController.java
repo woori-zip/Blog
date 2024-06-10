@@ -1,6 +1,7 @@
 package com.example.blog.controller;
 
 import com.example.blog.model.Post;
+import com.example.blog.model.Tag;
 import com.example.blog.model.User;
 import com.example.blog.service.PostService;
 import com.example.blog.service.TagService;
@@ -27,29 +28,47 @@ public class PostController {
     private TagService tagService;
 
     @GetMapping("/list")
-    public String list(@RequestParam(value = "tag", required = false) String tag, Model model) {
+    public String list(@RequestParam(value = "tag", required = false) String tag
+            , Model model) {
         List<Post> posts = postService.findAll(tag);
         model.addAttribute("posts", posts);
-        model.addAttribute("tags", tagService.findAll()); // 동적으로 태그 목록을 가져옴
+        List<Tag> tags = tagService.findAll();
+        model.addAttribute("tags", tags);
+        model.addAttribute("selectedTag", tag);
         return "post/list";
     }
 
-
     @GetMapping("/create")
     public String createForm(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user"); // 세션에서 로그인된 사용자 정보를 가져옴
-        if(user == null) {
-            return "${pageContext.request.contextPath}/users/signin";
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/users/signIn";
         }
+        List<Tag> tags = tagService.findAll();
         model.addAttribute("post", new Post());
+        model.addAttribute("tags", tags);
         return "post/create";
     }
 
     @PostMapping("/create")
-    public String createPost(Post post, HttpSession session, Model model) {
+    public String createPost(Post post
+            , @RequestParam(value = "newTag", required = false) String newTag
+            , HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if(user == null) {
-            return "${pageContext.request.contextPath}/users/signin";
+        if (user == null) {
+            return "redirect:/users/signIn";
+        }
+
+        if (newTag != null && !newTag.isEmpty()) {
+            Tag tag = new Tag();
+            tag.setName(newTag);
+            tagService.save(tag);
+            post.setTagId(tag.getId());
+        } else {
+            Tag existingTag = tagService.findByName(post.getTag());
+            if (existingTag != null) {
+                post.setTagId(existingTag.getId());
+            }
         }
         post.setAuthor(user.getId());
         post.setCreatedAt(LocalDateTime.now());

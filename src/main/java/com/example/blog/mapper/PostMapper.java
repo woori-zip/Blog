@@ -8,7 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface PostMapper {
-    List<Post> findByTag(String tag);
-    List<Post> findAll();
+    List<Post> findAll(String tag);
     void save(Post post);
 }

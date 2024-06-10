@@ -6,9 +6,9 @@
 
 <form method="get" action="${pageContext.request.contextPath}/post/list">
     <select name="tag" id="tagSelect" onchange="this.form.submit()">
-        <option value="" ${empty param.tag ? 'selected' : ''}>전체</option>
+        <option value="">전체</option>
         <c:forEach var="tag" items="${tags}">
-            <option value="${tag}" ${param.tag == tag ? 'selected' : ''}>${tag}</option>
+            <option value="${tag.name}" ${tag.name == selectedTag ? 'selected' : ''}>${tag.name}</option>
         </c:forEach>
     </select>
 </form>
@@ -25,13 +25,7 @@
         <c:forEach var="post" items="${posts}">
             <tr>
                 <td>${post.id}</td>
-                <td>
-                    <c:choose>
-                        <c:when test="${post.tag == '프로젝트'}">프로젝트</c:when>
-                        <c:when test="${post.tag == '공부'}">공부</c:when>
-                        <c:when test="${post.tag == '잡담'}">잡담</c:when>
-                    </c:choose>
-                </td>
+                <td>${post.tag}</td>
                 <td>${post.title}</td>
                 <td>${post.author}</td>
                 <td>
